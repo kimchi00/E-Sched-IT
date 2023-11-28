@@ -17,12 +17,12 @@ class CreateSchedule extends StatefulWidget {
 class _CreateScheduleState extends State<CreateSchedule> {
   String scheduleName = '';
   String selectedDay = 'Monday';
-  String selectedTimeStart = '7:00 AM';    // Pre-defined choices for the user
+  String selectedTimeStart = '7:00 AM'; // Pre-defined choices for the user
   String selectedTimeEnd = '8:30 AM';
-  String abbreviation = '';
-  String place = '';
-  String groupName = '';
-  String speaker = '';
+  String? abbreviation;
+  String? place;
+  String? groupName;
+  String? speaker;
 
   final List<String> daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -40,7 +40,7 @@ class _CreateScheduleState extends State<CreateSchedule> {
   }
 
   @override
-  Widget build(BuildContext context) { // Contains all the items for the create schedule view
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -53,11 +53,12 @@ class _CreateScheduleState extends State<CreateSchedule> {
           icon: Icon(Icons.close),
           color: Colors.black,
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(); // Close the CreateSchedule view without passing data
           },
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView( // Wrap your Column with SingleChildScrollView
+      child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
@@ -165,15 +166,18 @@ class _CreateScheduleState extends State<CreateSchedule> {
                   if (scheduleName.isEmpty) {
                     _showSnackBar('Please input a schedule name');
                   } else {
-                    // Check for other required fields and handle the form submission here
-                    print('Schedule Name: $scheduleName');
-                    print('Day: $selectedDay');
-                    print('Time Start: $selectedTimeStart');
-                    print('Time End: $selectedTimeEnd');
-                    print('Abbreviation: $abbreviation');
-                    print('Place: $place');
-                    print('Group Name/Section: $groupName');
-                    print('Speaker: $speaker');
+                    Schedule newSchedule = Schedule(
+                      day: selectedDay, // Use the selected day from the dropdown
+                      scheduleName: scheduleName,
+                      timeStart: selectedTimeStart,
+                      timeEnd: selectedTimeEnd,
+                      abbreviation: abbreviation,
+                      place: place,
+                      groupName: groupName,
+                      speaker: speaker,
+                    );
+
+                    Navigator.of(context).pop(newSchedule);
                   }
                 },
                 style: ButtonStyle(
@@ -190,7 +194,8 @@ class _CreateScheduleState extends State<CreateSchedule> {
                 ),
                 child: Text('Create Schedule'),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -200,13 +205,23 @@ class _CreateScheduleState extends State<CreateSchedule> {
 
 
 class Schedule {
+  final String day;
   final String scheduleName;
   final String timeStart;
   final String timeEnd;
+  final String? abbreviation;
+  final String? place;
+  final String? groupName;
+  final String? speaker;
 
   Schedule({
+    required this.day,
     required this.scheduleName,
     required this.timeStart,
     required this.timeEnd,
+    this.abbreviation,
+    this.place,
+    this.groupName,
+    this.speaker,
   });
 }
