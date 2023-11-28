@@ -29,15 +29,19 @@ class _DayViewState extends State<DayView> {
   List<String> daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   List<Schedule> schedules = [];
 
-  void _showSnackBar(String message, Schedule schedule) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-    ));
+  void _showSnackBar(String message, Schedule? schedule) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text(message),
+  ));
+
+  if (schedule != null) {
     setState(() {
       // Add the new schedule to the list
       schedules.add(schedule);
     });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -125,16 +129,20 @@ class _DayViewState extends State<DayView> {
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () async {
-                Schedule newSchedule = await Navigator.push(
+                Schedule? newSchedule = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => CreateSchedule()),
                 );
 
-                if (newSchedule != null) {
+                if (newSchedule != null) {   
                   _showSnackBar('Schedule created: ${newSchedule.scheduleName}', newSchedule);
+                } else {
+                  // Handle the case where the user exited without entering data
+                  print('User exited without entering schedule data.');
                 }
               },
             ),
+
             IconButton(
               icon: const Icon(Icons.calendar_today),
               onPressed: () {},
