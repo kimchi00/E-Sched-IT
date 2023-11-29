@@ -22,7 +22,7 @@ class DayView extends StatefulWidget {
 class _DayViewState extends State<DayView> {
   List<String> daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   List<Schedule> schedules = [];
-  List<Color> scheduleColors = [Color(0xFFACBEA3), Color(0xFF40476D), Color(0xFF826754), Color(0xFFAD5D4E),Color(0xFFD1B1CB), Color(0xFF57B8FF) ];
+  List<Color> scheduleColors = [Color(0xFFACBEA3), Color(0xFF40476D), Color(0xFF826754), Color(0xFFAD5D4E), Color(0xFF57B8FF) ];
   int colorIndex = 0;
 
   // Function to get the index of the current day
@@ -46,6 +46,7 @@ class _DayViewState extends State<DayView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
@@ -59,7 +60,7 @@ class _DayViewState extends State<DayView> {
           children: [
             const SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: CarouselSlider(
                 items: daysOfWeek.map((day) {
                   return Center(
@@ -93,20 +94,20 @@ class _DayViewState extends State<DayView> {
                                       title: Row(
                                         children: [
                                           Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               Text(
                                                 schedule.timeStart,
                                                 style: const TextStyle(
                                                   fontSize: 12,
-                                                  color: Colors.black,
+                                                  color: Colors.white,
                                                 ),
                                               ),
                                               Text(
                                                 schedule.timeEnd,
                                                 style: const TextStyle(
                                                   fontSize: 12,
-                                                  color: Colors.black,
+                                                  color: Colors.white,
                                                 ),
                                               ),
                                             ],
@@ -118,6 +119,7 @@ class _DayViewState extends State<DayView> {
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.normal,
                                                 fontSize: 15,
+                                                color: Colors.white,
                                               ),
                                             ),
                                           ),
@@ -130,13 +132,25 @@ class _DayViewState extends State<DayView> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              if (schedule.abbreviation != null) Text('${schedule.abbreviation}'),
+                                              if (schedule.abbreviation != null) Text(
+                                                '${schedule.abbreviation}',
+                                                style: const TextStyle(color: Colors.white,)
+                                                ),
                                               SizedBox(height: 10),
-                                              if (schedule.place != null) Text('${schedule.place}'),
+                                              if (schedule.place != null) Text(
+                                                '${schedule.place}',
+                                                style: const TextStyle(color: Colors.white,),
+                                                ),
                                               SizedBox(height: 10),
-                                              if (schedule.groupName != null) Text('${schedule.groupName}'),
+                                              if (schedule.groupName != null) Text(
+                                                '${schedule.groupName}',
+                                                style: const TextStyle(color: Colors.white,),
+                                                ),
                                               SizedBox(height: 10),
-                                              if (schedule.speaker != null) Text('${schedule.speaker}'),
+                                              if (schedule.speaker != null) Text(
+                                                '${schedule.speaker}',
+                                                style: const TextStyle(color: Colors.white,),
+                                                ),
                                             ],
                                           ),
                                         ),
@@ -200,7 +214,6 @@ class _DayViewState extends State<DayView> {
           ],
         ),
       ),
-      backgroundColor: Colors.white,
     );
   }
 }
