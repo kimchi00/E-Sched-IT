@@ -11,8 +11,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'create_schedule.dart';
 import 'settings.dart';
 import 'CustomExpansionTile.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MaterialApp(
       home: DayView(),

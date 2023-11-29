@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "862621479032",
+    "project_id": "e-sched-it-2e86d",
+    "storage_bucket": "e-sched-it-2e86d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862621479032:android:b3f5b930debceb8e0bbd8d",
+        "android_client_info": {
+          "package_name": "com.example.e_sched_it"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2jb1ymOq4mvwa6m8knmU-Qy1ani2PAo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
