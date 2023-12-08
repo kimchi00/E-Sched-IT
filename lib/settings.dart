@@ -50,7 +50,7 @@ class _SettingsState extends State<Settings> {  // For navigation when the text 
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () {
             Navigator.of(context).pop();

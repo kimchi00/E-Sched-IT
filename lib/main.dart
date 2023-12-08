@@ -2,33 +2,74 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'create_schedule.dart';
 import 'settings.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'weekview.dart';
 
-Future<void> main() async {
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  List<Schedule> schedules = await loadSchedulesFromLocalStorage();
   runApp(
     MaterialApp(
-      home: DayView(),
+      home: DayView(schedules),
     ),
   );
 }
 
+Schedule scheduleFromJson(String jsonString) {
+  final Map<String, dynamic> data = jsonDecode(jsonString);
+
+  return Schedule(
+    day: data['day'],
+    scheduleName: data['scheduleName'],
+    timeStart: data['timeStart'],
+    timeEnd: data['timeEnd'],
+    abbreviation: data['abbreviation'],
+    place: data['place'],
+    groupName: data['groupName'],
+    speaker: data['speaker'],
+  );
+}
+
+Future<List<Schedule>> loadSchedulesFromLocalStorage() async {
+  try {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String> savedSchedules = prefs.getStringList('schedules') ?? [];
+    return savedSchedules.map((jsonString) => scheduleFromJson(jsonString)).toList();
+  } catch (e) {
+    print('Error loading schedules from local storage: $e');
+    return [];
+  }
+}
+
 class DayView extends StatefulWidget {
+  final List<Schedule> schedules;
+
+  DayView(this.schedules);
+
   @override
   _DayViewState createState() => _DayViewState();
 }
 
 class _DayViewState extends State<DayView> {
   List<String> daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  List<Schedule> schedules = [];
-  List<Color> scheduleColors = [Color(0xFFACBEA3), Color(0xFF40476D), Color(0xFF826754), Color(0xFFAD5D4E), Color(0xFF57B8FF) ];
+  List<Color> scheduleColors = [Color(0xFFACBEA3), Color(0xFF40476D), Color(0xFF826754), Color(0xFFAD5D4E), Color(0xFF57B8FF)];
   int colorIndex = 0;
 
-  // Function to get the index of the current day
   int getCurrentDayIndex() {
-    int currentDayIndex = DateTime.now().weekday - 1; // Adjusting to zero-based index
-    return currentDayIndex < 0 ? 6 : currentDayIndex; // Sunday is 0, Monday is 1, ..., Saturday is 6
+    int currentDayIndex = DateTime.now().weekday - 1;
+    return currentDayIndex < 0 ? 6 : currentDayIndex;
+  }
+
+  Future<void> saveSchedulesToLocalStorage(List<Schedule> schedules) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final List<String> savedSchedules = schedules.map((schedule) => scheduleToJson(schedule)).toList();
+      prefs.setStringList('schedules', savedSchedules);
+    } catch (e) {
+      print('Error saving schedules to local storage: $e');
+    }
   }
 
   void _showSnackBar(String message, Schedule? schedule) {
@@ -38,9 +79,17 @@ class _DayViewState extends State<DayView> {
 
     if (schedule != null) {
       setState(() {
-        schedules.add(schedule);
+        widget.schedules.add(schedule);
+        saveSchedulesToLocalStorage(widget.schedules);
       });
     }
+  }
+
+    void _deleteSchedule(Schedule schedule) {
+    setState(() {
+      widget.schedules.remove(schedule);
+      saveSchedulesToLocalStorage(widget.schedules);
+    });
   }
 
   @override
@@ -74,7 +123,7 @@ class _DayViewState extends State<DayView> {
                           ),
                         ),
                         Column(
-                          children: schedules
+                          children: widget.schedules
                               .where((schedule) => schedule.day == day)
                               .map((schedule) {
                             Color currentColor = scheduleColors[colorIndex];
@@ -133,24 +182,46 @@ class _DayViewState extends State<DayView> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               if (schedule.abbreviation != null) Text(
-                                                '${schedule.abbreviation}',
-                                                style: const TextStyle(color: Colors.white,)
-                                                ),
+                                                'Abbreviation: ${schedule.abbreviation}',
+                                                style: const TextStyle(color: Colors.white,),
+                                              ) else const Text(
+                                                'Abbreviation: N/A',
+                                                style: TextStyle(color: Colors.white,),
+                                              ) , 
                                               SizedBox(height: 10),
                                               if (schedule.place != null) Text(
                                                 '${schedule.place}',
                                                 style: const TextStyle(color: Colors.white,),
-                                                ),
+                                              )else const Text(
+                                                'Place: N/A',
+                                                style: TextStyle(color: Colors.white,),
+                                              ) ,
                                               SizedBox(height: 10),
                                               if (schedule.groupName != null) Text(
                                                 '${schedule.groupName}',
                                                 style: const TextStyle(color: Colors.white,),
-                                                ),
+                                              )else const Text(
+                                                'Group Name: N/A',
+                                                style: TextStyle(color: Colors.white,),
+                                              ) ,
                                               SizedBox(height: 10),
                                               if (schedule.speaker != null) Text(
                                                 '${schedule.speaker}',
                                                 style: const TextStyle(color: Colors.white,),
+                                              )else const Text(
+                                                'Speaker: N/A',
+                                                style: TextStyle(color: Colors.white,),
+                                              ) ,
+                                              Align(
+                                                alignment: Alignment.centerRight,
+                                                child: IconButton(
+                                                  color: Colors.white,
+                                                  icon: Icon(Icons.delete),
+                                                    onPressed: () {
+                                                      _deleteSchedule(schedule);
+                                                    },
                                                 ),
+                                              )
                                             ],
                                           ),
                                         ),
@@ -170,7 +241,7 @@ class _DayViewState extends State<DayView> {
                   height: 1000,
                   viewportFraction: 1,
                   enableInfiniteScroll: true,
-                  initialPage: getCurrentDayIndex(), // Set initial page to the current day index
+                  initialPage: getCurrentDayIndex(),
                   reverse: false,
                 ),
               ),
@@ -209,7 +280,12 @@ class _DayViewState extends State<DayView> {
             ),
             IconButton(
               icon: const Icon(Icons.calendar_today),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WeekView()),
+                );
+              },
             ),
           ],
         ),
