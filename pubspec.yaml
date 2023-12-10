@@ -28,7 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  syncfusion_flutter_calendar: ^19.2.51
+  path_provider: ^2.0.13
   carousel_slider: ^4.0.0
   flutter:
     sdk: flutter

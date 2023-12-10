@@ -4,8 +4,7 @@ import 'create_schedule.dart';
 import 'settings.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'weekview.dart';
-
+import 'notes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -190,7 +189,7 @@ class _DayViewState extends State<DayView> {
                                               ) , 
                                               SizedBox(height: 10),
                                               if (schedule.place != null) Text(
-                                                '${schedule.place}',
+                                                'Place: ${schedule.place}',
                                                 style: const TextStyle(color: Colors.white,),
                                               )else const Text(
                                                 'Place: N/A',
@@ -198,7 +197,7 @@ class _DayViewState extends State<DayView> {
                                               ) ,
                                               SizedBox(height: 10),
                                               if (schedule.groupName != null) Text(
-                                                '${schedule.groupName}',
+                                                'Group Name: ${schedule.groupName}',
                                                 style: const TextStyle(color: Colors.white,),
                                               )else const Text(
                                                 'Group Name: N/A',
@@ -206,7 +205,7 @@ class _DayViewState extends State<DayView> {
                                               ) ,
                                               SizedBox(height: 10),
                                               if (schedule.speaker != null) Text(
-                                                '${schedule.speaker}',
+                                                'Speaker: ${schedule.speaker}',
                                                 style: const TextStyle(color: Colors.white,),
                                               )else const Text(
                                                 'Speaker: N/A',
@@ -279,11 +278,11 @@ class _DayViewState extends State<DayView> {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.calendar_today),
+              icon: const Icon(Icons.note),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => WeekView()),
+                  MaterialPageRoute(builder: (context) => Notes()),
                 );
               },
             ),

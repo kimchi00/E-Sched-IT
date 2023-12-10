@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-
 class CreateSchedule extends StatefulWidget {
   @override
   _CreateScheduleState createState() => _CreateScheduleState();
@@ -13,10 +12,11 @@ class _CreateScheduleState extends State<CreateSchedule> {
   String selectedDay = 'Monday';
   String selectedTimeStart = '7:00 AM';
   String selectedTimeEnd = '8:30 AM';
-  String? abbreviation;
+  String abbreviation = '';
   String? place;
   String? groupName;
   String? speaker;
+  String? note;
 
   final List<String> daysOfWeek = [
     'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
@@ -28,7 +28,6 @@ class _CreateScheduleState extends State<CreateSchedule> {
     '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM',
     '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM',
   ];
-  
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -36,7 +35,6 @@ class _CreateScheduleState extends State<CreateSchedule> {
     ));
   }
 
-  
   Future<void> _saveScheduleToLocal(Schedule schedule) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,7 +46,6 @@ class _CreateScheduleState extends State<CreateSchedule> {
       _showSnackBar('Schedule saved successfully');
     } catch (e) {
       print('Error saving schedule to local storage: $e');
-      
     }
   }
 
@@ -82,6 +79,15 @@ class _CreateScheduleState extends State<CreateSchedule> {
                   });
                 },
                 decoration: InputDecoration(labelText: 'Schedule Name'),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    abbreviation = value;
+                  });
+                },
+                decoration: InputDecoration(labelText: 'Abbreviation'),
               ),
               SizedBox(height: 20),
               Row(
@@ -141,15 +147,6 @@ class _CreateScheduleState extends State<CreateSchedule> {
               TextField(
                 onChanged: (value) {
                   setState(() {
-                    abbreviation = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'Abbreviation'),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
                     place = value;
                   });
                 },
@@ -178,6 +175,8 @@ class _CreateScheduleState extends State<CreateSchedule> {
                 onPressed: () async {
                   if (scheduleName.isEmpty) {
                     _showSnackBar('Please input a schedule name');
+                  } else if (abbreviation.isEmpty) {
+                    _showSnackBar('Please input a schedule abbreviation');
                   } else {
                     Schedule newSchedule = Schedule(
                       day: selectedDay,
@@ -226,6 +225,7 @@ String scheduleToJson(Schedule schedule) {
     'place': schedule.place,
     'groupName': schedule.groupName,
     'speaker': schedule.speaker,
+    'note': schedule.note,
   };
 
   return jsonEncode(data);
@@ -236,23 +236,25 @@ class Schedule {
   final String scheduleName;
   final String timeStart;
   final String timeEnd;
-  final String? abbreviation;
+  final String abbreviation;
   final String? place;
   final String? groupName;
   final String? speaker;
+  String? note;
 
   Schedule({
     required this.day,
     required this.scheduleName,
     required this.timeStart,
     required this.timeEnd,
-    this.abbreviation,
+    required this.abbreviation,
     this.place,
     this.groupName,
     this.speaker,
+    this.note,
   });
 
-   factory Schedule.fromJson(Map<String, dynamic> json) {
+  factory Schedule.fromJson(Map<String, dynamic> json) {
     return Schedule(
       day: json['day'],
       scheduleName: json['scheduleName'],
@@ -262,6 +264,7 @@ class Schedule {
       place: json['place'],
       groupName: json['groupName'],
       speaker: json['speaker'],
+      note: json['note'],
     );
   }
 }
