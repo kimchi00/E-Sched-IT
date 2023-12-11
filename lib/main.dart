@@ -182,10 +182,7 @@ class _DayViewState extends State<DayView> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              if (schedule.abbreviation != null) Text(
-                                                'Abbreviation: ${schedule.abbreviation}',
-                                                style: const TextStyle(color: Colors.white,),
-                                              ) else const Text(
+                                              Text(
                                                 'Abbreviation: N/A',
                                                 style: TextStyle(color: Colors.white,),
                                               ) , 
