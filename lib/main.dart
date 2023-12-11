@@ -12,6 +12,7 @@ void main() async {
   runApp(
     MaterialApp(
       home: DayView(schedules),
+      title: "E-Sched IT",
     ),
   );
 }
@@ -57,8 +58,9 @@ class _DayViewState extends State<DayView> {
   int colorIndex = 0;
 
   int getCurrentDayIndex() {
-    int currentDayIndex = DateTime.now().weekday - 1;
-    return currentDayIndex < 0 ? 6 : currentDayIndex;
+    DateTime now = DateTime.now();
+    String currentDay = daysOfWeek[now.weekday - 1]; 
+    return daysOfWeek.indexOf(currentDay);
   }
 
   Future<void> saveSchedulesToLocalStorage(List<Schedule> schedules) async {
@@ -240,7 +242,7 @@ class _DayViewState extends State<DayView> {
                   height: 1000,
                   viewportFraction: 1,
                   enableInfiniteScroll: true,
-                  initialPage: getCurrentDayIndex(),
+                  initialPage: getCurrentDayIndex()+1,
                   reverse: false,
                 ),
               ),

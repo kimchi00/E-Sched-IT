@@ -16,7 +16,7 @@ class _CreateScheduleState extends State<CreateSchedule> {
   String? place;
   String? groupName;
   String? speaker;
-  String? note;
+  String? note = '';
 
   final List<String> daysOfWeek = [
     'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
@@ -187,6 +187,7 @@ class _CreateScheduleState extends State<CreateSchedule> {
                       place: place,
                       groupName: groupName,
                       speaker: speaker,
+                      note: note,
                     );
 
                     _saveScheduleToLocal(newSchedule);
@@ -232,14 +233,14 @@ String scheduleToJson(Schedule schedule) {
 }
 
 class Schedule {
-  final String day;
-  final String scheduleName;
-  final String timeStart;
-  final String timeEnd;
-  final String abbreviation;
-  final String? place;
-  final String? groupName;
-  final String? speaker;
+  String day;
+  String scheduleName;
+  String timeStart;
+  String timeEnd;
+  String abbreviation;
+  String? place;
+  String? groupName;
+  String? speaker;
   String? note;
 
   Schedule({

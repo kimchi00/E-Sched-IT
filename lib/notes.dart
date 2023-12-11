@@ -121,12 +121,15 @@ class _NotesState extends State<Notes> {
     );
   }
 
-  void _showNoteDetailsScreen(BuildContext context, Schedule schedule) {
-    Navigator.push(
+  void _showNoteDetailsScreen(BuildContext context, Schedule schedule) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => NoteDetailsScreen(schedule, schedules),
       ),
     );
+
+    // Refresh data when returning from NoteDetailsScreen
+    loadSchedules();
   }
 }

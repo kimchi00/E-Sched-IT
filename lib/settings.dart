@@ -63,13 +63,6 @@ class _SettingsState extends State<Settings> {  // For navigation when the text 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onTap: _navigateToLoginSignUp,
-              child: const Text(
-                "Login/Sign Up",
-                style: TextStyle(fontSize: 16, height: 3),
-              ),
-            ),
-            GestureDetector(
               onTap: _navigateToGeneral,
               child: const Text(
                 "General",
